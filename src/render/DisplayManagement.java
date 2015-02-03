@@ -15,7 +15,7 @@ public class DisplayManagement {
 		ContextAttribs attrib = new ContextAttribs(3,2).withForwardCompatible(true).withProfileCore(true);
 		try {
 			Display.setDisplayMode(new DisplayMode(width,height));
-			Display.create(new PixelFormat(), attrib);
+			Display.create();//new PixelFormat(), attrib
 			Display.setTitle("Display");
 		} catch (LWJGLException e) {
 			e.printStackTrace();
