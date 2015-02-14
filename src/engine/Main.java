@@ -4,7 +4,10 @@ import models.RawModel;
 import models.TexturedModel;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
 
+import entities.Camera;
+import entities.Entity;
 import render.DisplayManagement;
 import render.Loader;
 import render.Renderer;
@@ -18,10 +21,10 @@ public class Main {
 		DisplayManagement.createDisplay();
 		
 		Loader loader = new Loader();
-		Renderer renderer = new Renderer();
 		StaticShader shader = new StaticShader();
+		Renderer renderer = new Renderer(shader);
 		
-		float verticies[]={ //rectangle
+		/*float vertices[]={ //rectangle
 				-0.5f,0.5f,0f,	//v0
 				-0.5f,-0.5f,0f,	//v1
 				0.5f,-0.5f,0f,	//v2
@@ -37,16 +40,103 @@ public class Main {
 			0,1,	//V1
 			1,1,	//V2
 			1,0		//V3
+		};*/
+		
+		float[] vertices = {//cube			
+				-0.5f,0.5f,-0.5f,	
+				-0.5f,-0.5f,-0.5f,	
+				0.5f,-0.5f,-0.5f,	
+				0.5f,0.5f,-0.5f,		
+				
+				-0.5f,0.5f,0.5f,	
+				-0.5f,-0.5f,0.5f,	
+				0.5f,-0.5f,0.5f,	
+				0.5f,0.5f,0.5f,
+				
+				0.5f,0.5f,-0.5f,	
+				0.5f,-0.5f,-0.5f,	
+				0.5f,-0.5f,0.5f,	
+				0.5f,0.5f,0.5f,
+				
+				-0.5f,0.5f,-0.5f,	
+				-0.5f,-0.5f,-0.5f,	
+				-0.5f,-0.5f,0.5f,	
+				-0.5f,0.5f,0.5f,
+				
+				-0.5f,0.5f,0.5f,
+				-0.5f,0.5f,-0.5f,
+				0.5f,0.5f,-0.5f,
+				0.5f,0.5f,0.5f,
+				
+				-0.5f,-0.5f,0.5f,
+				-0.5f,-0.5f,-0.5f,
+				0.5f,-0.5f,-0.5f,
+				0.5f,-0.5f,0.5f
+				
 		};
 		
-		RawModel model = loader.loadToVAO(verticies, textureCoords, indices);
-		ModelTexture texture = new ModelTexture(loader.loadTexture("weave"));
+		float[] textureCoords = {
+				
+				0,0,
+				0,1,
+				1,1,
+				1,0,			
+				0,0,
+				0,1,
+				1,1,
+				1,0,			
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0
+
+				
+		};
+		
+		int[] indices = {
+				0,1,3,	
+				3,1,2,	
+				4,5,7,
+				7,5,6,
+				8,9,11,
+				11,9,10,
+				12,13,15,
+				15,13,14,	
+				16,17,19,
+				19,17,18,
+				20,21,23,
+				23,21,22
+
+		};
+		
+		RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
+		ModelTexture texture = new ModelTexture(loader.loadTexture("yellow"));
 		TexturedModel texturedModel = new TexturedModel(model, texture);
 		
-		while(!Display.isCloseRequested()){
+		Entity entity = new Entity(texturedModel, new Vector3f(0,0,-5),0,0,0,1);
+		
+		Camera camera = new Camera();
+		
+		while(!Display.isCloseRequested()){//one iteration per frame
+//			entity.increasePosition(0, 0, -0.02f);//quickly change position
+			entity.increaseRotation(1, 1, 0);//rotate the entity
+			camera.move();
 			renderer.prepare();
 			shader.start();
-			renderer.render(texturedModel);
+			shader.loadViewMatrix(camera);
+			renderer.render(entity, shader);
 			shader.stop();
 			DisplayManagement.updateDisplay();
 			
