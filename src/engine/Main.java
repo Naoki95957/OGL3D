@@ -10,6 +10,7 @@ import entities.Camera;
 import entities.Entity;
 import render.DisplayManagement;
 import render.Loader;
+import render.OBJLoader;
 import render.Renderer;
 import shaders.StaticShader;
 import textures.ModelTexture;
@@ -23,6 +24,8 @@ public class Main {
 		Loader loader = new Loader();
 		StaticShader shader = new StaticShader();
 		Renderer renderer = new Renderer(shader);
+		
+		RawModel model = OBJLoader.loadOBJModel("stall", loader);
 		
 		/*float vertices[]={ //rectangle
 				-0.5f,0.5f,0f,	//v0
@@ -42,7 +45,7 @@ public class Main {
 			1,0		//V3
 		};*/
 		
-		float[] vertices = {//cube			
+		/*float[] vertices = {//cube			
 				-0.5f,0.5f,-0.5f,	
 				-0.5f,-0.5f,-0.5f,	
 				0.5f,-0.5f,-0.5f,	
@@ -119,19 +122,19 @@ public class Main {
 				20,21,23,
 				23,21,22
 
-		};
+		};*/
 		
-		RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
-		ModelTexture texture = new ModelTexture(loader.loadTexture("yellow"));
+//		RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
+		ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture"));
 		TexturedModel texturedModel = new TexturedModel(model, texture);
 		
-		Entity entity = new Entity(texturedModel, new Vector3f(0,0,-5),0,0,0,1);
+		Entity entity = new Entity(texturedModel, new Vector3f(0,0,-50),0,0,0,1);
 		
 		Camera camera = new Camera();
 		
 		while(!Display.isCloseRequested()){//one iteration per frame
 //			entity.increasePosition(0, 0, -0.02f);//quickly change position
-			entity.increaseRotation(1, 1, 0);//rotate the entity
+			entity.increaseRotation(0, 1, 0);//rotate the entity
 			camera.move();
 			renderer.prepare();
 			shader.start();

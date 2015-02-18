@@ -62,7 +62,6 @@ public class Loader {
 		vaos.add(vaoID);
 		GL30.glBindVertexArray(vaoID);
 		return vaoID;
-		
 	}
 	
 	private void bindIndicesBuffer(int indices[]){
